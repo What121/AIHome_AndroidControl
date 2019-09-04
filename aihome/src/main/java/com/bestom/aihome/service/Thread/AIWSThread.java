@@ -7,10 +7,11 @@ import com.bestom.aihome.WebSocket.AIWSClient;
 public class AIWSThread extends Thread {
     private static final String TAG = "AIWSThread";
 
+    public boolean flag=true;
 
     @Override
     public void run() {
-        while (true){
+        while (flag){
             try {
                 sleep(1000);
                 Log.i(TAG, "run: States"+AIWSClient.getInstance().getReadyState().toString());
@@ -30,6 +31,7 @@ public class AIWSThread extends Thread {
                             "}");
 
                     Log.i(TAG, "run: 发送认证 ");
+                    flag=false;
                     break;
                 }
             } catch (InterruptedException e) {

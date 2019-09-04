@@ -19,6 +19,8 @@ import com.bestom.aihome.manager.serial.SerialManager;
 public class AIHomeService extends Service {
     private static final String TAG = "AIHomeService";
 
+    private AIWSThread mAIWSThread;
+
     static {
         AIWSClient.getInstance();
         System.loadLibrary("serial_port");
@@ -33,7 +35,8 @@ public class AIHomeService extends Service {
         SerialManager.getInstance().turnOn();
 
         //连接websocketClient
-        new AIWSThread().start();
+        mAIWSThread = new AIWSThread();
+        mAIWSThread.start();
         AIWSClient.getInstance().connect();
 
 
@@ -50,11 +53,14 @@ public class AIHomeService extends Service {
             public void data(Object data) {
                 String hexdata = (String)data;
 
-                if (AIWSClient.getInstance().isOpen()){
+                if (AIWSClient.getInstance().getReadyState().toString().equals("OPEN")){
 //                    AIWSClient.getInstance().send(hexdata);
                     //上传至 服务器的 hexdata
                     Log.i(TAG, "data: 上传至 服务器");
                 }else {
+                    mAIWSThread.flag=true;
+//                    AIWSClient.getInstance().reconnect();
+
                     Log.i(TAG, "data: 未连接服务器");
                 }
 
