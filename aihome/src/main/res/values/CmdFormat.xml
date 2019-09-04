@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="cmds_image">553A</string>  <!-- 固定起始位 -->
+    <string name="cmds_size">20</string>           <!-- 数据包总长度32 -->
+    <string name="cmds_serialno">00</string>       <!-- 传输数据包序列号（发送命令直接0不做校验，回复不是0） -->
+    <string name="cmds_version">0200</string><!-- 版本号第一个字节为主版本，第二个字节为副版本 -->
+
+    <array name="cmds_cmdtype">
+        <item>01</item>   <!-- 设备上传命令 -->
+        <item>02</item>   <!-- 系统下发命令 -->
+        <item>03</item>   <!-- 事件命令 -->
+        <item>04</item>   <!-- 回复命令 -->
+        <item>05</item>   <!-- 测试命令 -->
+    </array>
+
+    <string name="cmds_datasize">data有效数据长度，data最大为10bytes</string>
+
+    <!-- id -->
+    <array name="cmds_deviceid">
+        <item>01</item>   <!-- 温湿度HT  -->
+        <item>02</item>   <!-- 太阳能SE  -->
+        <!-- ... ... -->
+        <item>7F</item>   <!-- 中继路由器ID -->
+    </array>
+    <array name="cmds_cmdid">   <!-- 系统下发命令  -->
+        <item>80</item>   <!-- 协调器心跳包  -->
+        <item>81</item>   <!-- 中继LED灯开关  -->
+        <item>82</item>   <!-- 协调器/路由器删除无效节点  -->
+        <!-- ... ... -->
+        <item>F9</item>   <!-- 子设备发送心跳包命令  -->
+        <item>FA</item>   <!-- 子设备申请组网命令  -->
+        <item>FB</item>   <!-- 清除节点命令  -->
+        <item>FC</item>   <!-- 清除网络参数命令  -->
+        <item>FD</item>   <!-- 允许组网命令  -->
+        <item>FE</item>   <!-- 系统复位命令  -->
+    </array>
+    <!-- ************************************************************ -->
+
+    <!-- code -->
+    <array name="cmds_devicecode">
+        <item>01</item>   <!-- 外部供电设备 -->
+        <item>02</item>   <!-- 电池供电设备 -->
+        <item>03</item>   <!-- 无源设备 -->
+    </array>
+    <array name="cmds_cmdcode">
+        <item>系统命令取反</item>
+    </array>
+    <!--**************************************************************-->
+
+    <string name="cmds_data">10bytes</string>
+
+    <string name="cmds_addrstart">3B</string>
+    <string name="cmds_addrshort">1AE0</string>
+    <string name="cmds_addrlong">8bytes</string>
+
+    <string name="cmds_check">CS</string>
+
+</resources>

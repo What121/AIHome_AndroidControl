@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="broadcast_sys_boot">android.intent.action.BOOT_COMPLETED</string>
+    <string name="broadcast_aihome_service_reboot">com.bestom.aihome.broadcast.AIHomeService_REBOOT</string>
+
+
+</resources>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.bestom.aihome">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:process=":aihome"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+
+
+        <service
+            android:process=":aihomeService"
+            android:name=".service.AIHomeService"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter android:priority="1000">
+                <action android:name="com.bestom.aihome.service.AIHomeService"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+        </service>
+        <!--
+        enabled 广播可用
+        android:exported="true" 外部app可调用
+        android:directBootAware="true" 锁屏也可调用
+        android:priority="1000" 设置进程优先级 1000 最高
+        -->
+        <receiver
+            android:process=":aihomeReceiver"
+            android:name=".broadcastreceive.OnLiveReceiver"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.bestom.aihome.broadcast.AIHomeService_REBOOT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+
+
+    </application>
+
+</manifest>
