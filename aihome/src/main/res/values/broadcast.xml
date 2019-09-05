@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="broadcast_sys_boot">android.intent.action.BOOT_COMPLETED</string>
+    <string name="broadcast_sys_net_change0">android.NET.conn.CONNECTIVITY_CHANGE</string>
+
+    <string name="broadcast_sys_net_change1">android.net.conn.CONNECTIVITY_CHANGE_IMMEDIATE</string>
+
     <string name="broadcast_aihome_service_reboot">com.bestom.aihome.broadcast.AIHomeService_REBOOT</string>
+
 
 
 </resources>

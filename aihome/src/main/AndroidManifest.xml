@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bestom.aihome">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -29,6 +30,23 @@
         </activity>
 
 
+        <!--
+        enabled 广播可用
+        android:exported="true" 外部app可调用
+        android:directBootAware="true" 锁屏也可调用
+        android:priority="1000" 设置进程优先级 1000 最高
+        -->
+        <receiver android:name=".broadcastreceive.NetBroadReceiver"
+            android:process=":aihomeService"
+            android:directBootAware="true"
+            android:enabled="true">
+            <intent-filter >
+                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE_IMMEDIATE"/>
+                <!--action android:name="android.net.wifi.STATE_CHANGE"/ 这个不需要-->
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
 
         <service
             android:process=":aihomeService"
@@ -57,6 +75,7 @@
             android:exported="true">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!--action android:name="android.net.wifi.STATE_CHANGE"/-->
                 <action android:name="com.bestom.aihome.broadcast.AIHomeService_REBOOT"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>

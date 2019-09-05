@@ -7,22 +7,25 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.bestom.aihome.WebSocket.AIWSClient;
+import com.bestom.aihome.common.constant.Const;
 import com.bestom.aihome.imple.EnventDataObserver;
 import com.bestom.aihome.imple.ReceiveDataObserver;
 import com.bestom.aihome.imple.inter.DataObservable;
 import com.bestom.aihome.imple.inter.DataObserver;
 import com.bestom.aihome.imple.inter.Listener.DataReceivedListener;
 import com.bestom.aihome.manager.serial.SerialManager;
+import com.bestom.aihome.service.Thread.AIWSClientThread;
 
 
 public class AIHomeService extends Service {
     private static final String TAG = "AIHomeService";
+    private AIWSClientThreadHandler mAIWSClientThreadHandler;
 
     static {
         AIWSClient.getInstance();
         System.loadLibrary("serial_port");
     }
-    
+
     public AIHomeService()  {
         Log.d(TAG, "AIHomeService: ....");
 
@@ -30,17 +33,9 @@ public class AIHomeService extends Service {
         SerialManager.getInstance().turnOn();
 
         //连接websocketClient
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5*1000);
-                    AIWSClient.getInstance().connect();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        new AIWSClientThread().start();
+
+
 
 
     }

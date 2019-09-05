@@ -7,8 +7,11 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.bestom.aihome.R;
+import com.bestom.aihome.WebSocket.AIWSClient;
+import com.bestom.aihome.common.constant.NetworkType;
+import com.bestom.aihome.common.utils.NetworkUtil;
 
-public class OnLiveReceiver extends BroadcastReceiver {
+public class OnLiveReceiver extends BroadcastReceiver   {
     private static final String TAG = "OnLiveReceiver";
 
     @Override
@@ -30,9 +33,6 @@ public class OnLiveReceiver extends BroadcastReceiver {
             ;
         }
     }
-
-
-
 
 
 }

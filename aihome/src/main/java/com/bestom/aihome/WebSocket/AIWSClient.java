@@ -2,8 +2,6 @@ package com.bestom.aihome.WebSocket;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -16,7 +14,9 @@ public class AIWSClient extends WebSocketClient {
     private static final String TAG = "AIWSClient";
 
     private static URI serveruri;
-    private int i=0;
+    public static volatile int i = 0;
+
+    private Thread reconnectThread;
 
     static {
         try {
@@ -42,11 +42,12 @@ public class AIWSClient extends WebSocketClient {
         return instance;
     }
 
-    private AIWSClient(URI serverUri)  {
+    private AIWSClient(URI serverUri) {
         super(serverUri);
+
     }
 
-    private AIWSClient(URI serverUri, Draft protocolDraft)  {
+    private AIWSClient(URI serverUri, Draft protocolDraft) {
         super(serverUri, protocolDraft);
     }
 
@@ -54,11 +55,11 @@ public class AIWSClient extends WebSocketClient {
         super(serverUri, httpHeaders);
     }
 
-    private AIWSClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders)  {
+    private AIWSClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders) {
         super(serverUri, protocolDraft, httpHeaders);
     }
 
-    private AIWSClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders, int connectTimeout)  {
+    private AIWSClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders, int connectTimeout) {
         super(serverUri, protocolDraft, httpHeaders, connectTimeout);
     }
 
@@ -67,7 +68,7 @@ public class AIWSClient extends WebSocketClient {
     public void onOpen(ServerHandshake serverHandshake) {
         //连接成功
         Log.i(TAG, "onOpen: ");
-        i=0;
+        i = 0;
         //发送认证
         send("{\n" +
                 "\"id\": 957,\n" +
@@ -87,41 +88,43 @@ public class AIWSClient extends WebSocketClient {
     public void onMessage(String s) {
 
 
-
-        Log.i(TAG, "onMessage: "+s);
+        Log.i(TAG, "onMessage: " + s);
     }
 
     @Override
     public void onClose(int i, String s, boolean b) {
 
-        Log.i(TAG, "onClose: "+s);
+        Log.i(TAG, "onClose: " + s);
     }
 
     @Override
     public void onError(Exception e) {
-        String message=e.getMessage();
-        if (message.indexOf("Host is unresolved")==0){
-            Log.i(TAG, "onError: "+message+"请检查网络连接状态和服务器"+serveruri+"状态！");
-        }else {
-            Log.i(TAG, "onError: "+message);
-        }
-
-        if (i<3){
-            //尝试第i次重新连接，最大重连数3
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        i++;
-                        Log.i(TAG, "reconnection: 10s 后 尝试第"+i+"次重新连接！！！");
-                        Thread.sleep(10000);
-                        AIWSClient.getInstance().reconnect();
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
+        String message = e.getMessage();
+        if (message != null) {
+            if (message.indexOf("Host is unresolved") == 0) {
+                Log.i(TAG, "onError: " + message + "请检查网络连接状态和服务器" + serveruri + "状态！");
+                if (i < 3) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                i++;
+                                Log.i(TAG, "reconnection: 20s 后 尝试第" + i + "次重新连接！！！");
+                                Thread.sleep(20000);
+                                AIWSClient.getInstance().connect();
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }).start();
+                } else {
+                    Log.i(TAG, "onError: " + message+"重连次数已达3次");
                 }
-            }).start();
-
+            }else {
+                Log.i(TAG, "onError: " + message);
+            }
+        }else {
+            Log.i(TAG, "onError: message is null");
         }
 
     }

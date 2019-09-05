@@ -6,6 +6,9 @@ package com.bestom.aihome.common.constant;
 public class Const {
     public static final int SerialManager_SerialManagerHandler_what=1;
 
+    public static final int AIHoneService_AIHoneServiceHandler_connectionWSClient=100;
+    public static final int AIHoneService_AIHoneServiceHandler_reconnectionWSClient=101;
+
 
     public static final long DEF_TIMEOUT = 3 * 1000; //3 * 1000ms
     public static final long DEF_TIMEOUT_5 = 5 * 1000; //5 * 1000ms
