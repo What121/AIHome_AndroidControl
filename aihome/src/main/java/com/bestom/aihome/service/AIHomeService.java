@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.bestom.aihome.WebSocket.AIWSClient;
-import com.bestom.aihome.service.Thread.AIWSThread;
 import com.bestom.aihome.imple.EnventDataObserver;
 import com.bestom.aihome.imple.ReceiveDataObserver;
 import com.bestom.aihome.imple.inter.DataObservable;
@@ -19,8 +18,6 @@ import com.bestom.aihome.manager.serial.SerialManager;
 public class AIHomeService extends Service {
     private static final String TAG = "AIHomeService";
 
-    private AIWSThread mAIWSThread;
-
     static {
         AIWSClient.getInstance();
         System.loadLibrary("serial_port");
@@ -29,16 +26,21 @@ public class AIHomeService extends Service {
     public AIHomeService()  {
         Log.d(TAG, "AIHomeService: ....");
 
-
-
         //打开串口
         SerialManager.getInstance().turnOn();
 
         //连接websocketClient
-        mAIWSThread = new AIWSThread();
-        mAIWSThread.start();
-        AIWSClient.getInstance().connect();
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5*1000);
+                    AIWSClient.getInstance().connect();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
 
     }
@@ -58,10 +60,11 @@ public class AIHomeService extends Service {
                     //上传至 服务器的 hexdata
                     Log.i(TAG, "data: 上传至 服务器");
                 }else {
-                    mAIWSThread.flag=true;
-//                    AIWSClient.getInstance().reconnect();
+//                    AIWSThread.flag =true;
 
-                    Log.i(TAG, "data: 未连接服务器");
+                    Log.i(TAG, "data: 与服务器断开连接");
+//                    AIWSClient.getInstance().connect();
+//                    Log.i(TAG, "run: reconection WSocket ");
                 }
 
             }
@@ -102,6 +105,7 @@ public class AIHomeService extends Service {
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         Log.d(TAG, "onBind: ....");
+
 
 //        绑定replay 回复 信息；
 
