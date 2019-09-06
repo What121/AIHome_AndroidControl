@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.bestom.aihome.WebSocket.AIWSClient;
-import com.bestom.aihome.common.constant.Const;
 import com.bestom.aihome.imple.EnventDataObserver;
 import com.bestom.aihome.imple.ReceiveDataObserver;
 import com.bestom.aihome.imple.inter.DataObservable;
@@ -36,8 +35,6 @@ public class AIHomeService extends Service {
         new AIWSClientThread().start();
 
 
-
-
     }
 
     @Override
@@ -53,7 +50,9 @@ public class AIHomeService extends Service {
                 if (AIWSClient.getInstance().getReadyState().toString().equals("OPEN")){
 //                    AIWSClient.getInstance().send(hexdata);
                     //上传至 服务器的 hexdata
-                    Log.i(TAG, "data: 上传至 服务器");
+//                    Log.i(TAG, "data: 上传至 服务器");
+
+                    Log.i(TAG, "data: 下发到apk");
                 }else {
 //                    AIWSThread.flag =true;
 

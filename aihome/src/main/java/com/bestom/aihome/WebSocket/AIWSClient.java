@@ -2,6 +2,10 @@ package com.bestom.aihome.WebSocket;
 
 import android.util.Log;
 
+import com.bestom.aihome.bean.NetBean;
+import com.bestom.aihome.common.utils.MD5;
+import com.bestom.aihome.common.utils.TimeUtil;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -69,19 +73,15 @@ public class AIWSClient extends WebSocketClient {
         //连接成功
         Log.i(TAG, "onOpen: ");
         i = 0;
+
+        NetBean netBean=new NetBean();
+        netBean.setTIME(TimeUtil.getCurTime());
+        String sign= MD5.stringToMD5(netBean.getSignString()) ;
+
+        String request="{\"id\":1001,\"method\":\"WbAuth\",\"system\":{\"ver\":\"1.0\",\"lang\":\"en\",\"userid\":\""+netBean.getUSERID()+"\",\"appkey\":\""+netBean.getAPPKEY()+"\",\"time\":"+netBean.getTIME()+",\"sign\":\""+sign+"\"}}";
+        Log.i(TAG, "onOpen: request"+request);
         //发送认证
-        send("{\n" +
-                "\"id\": 957,\n" +
-                "\"method\": \"WbAuth\",\n" +
-                "\"system\": {\n" +
-                "\"ver\": \"1.0\",\n" +
-                "\"lang\": \"en\",\n" +
-                "\"userid\": \"1111111\",\n" +
-                "\"appkey\": \"APPKEY_XXXXXXXX\",\n" +
-                "\"time\": 1447641115,\n" +
-                "\"sign\": \"SIGN_XXXXXXXX\"\n" +
-                "}\n" +
-                "}");
+        send(request);
     }
 
     @Override
